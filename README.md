@@ -9,7 +9,11 @@ VirtualHere USB Server for Linux can do the job.
 1. The technician need to [install VirtualHere USB Client from here](https://www.virtualhere.com/usb_client_software), enable Reverse Client feature, and ensure the port 7573 open to public. If the technician does not have a public IP address, We strongly recommend you to purchase EasyFind Subscription.
 2. Assuming your public IP address is resolved from `yourdomain.example.com`. Ask the customer to execute this command and enter the sudo password when prompted. 
 ```
-curl https://raw.githubusercontent.com/HikariCalyx/virtualhere_usb_redirector_linux/main/virtualhere_reverse | sudo sh -s - yourdomain.example.com:7573
+curl https://raw.githubusercontent.com/HikariCalyx/virtualhere_usb_redirector_linux/main/virtualhere_reverse | sudo bash -s - yourdomain.example.com:7573
+```
+However if the domain parameter is not given, you'll be asked to input the domain yourself:
+```
+curl https://raw.githubusercontent.com/HikariCalyx/virtualhere_usb_redirector_linux/main/virtualhere_reverse | sudo bash
 ```
 4. Now ask the customer to connect the device under proper mode (e.g. Fastboot for Android device) to Linux machine.
 
