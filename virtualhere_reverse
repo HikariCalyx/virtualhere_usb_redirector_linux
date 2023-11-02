@@ -1,0 +1,112 @@
+#!/bin/bash
+
+echo -e 'VirtualHere Redirection Module'
+
+if [ "$(id -u)" -ne 0 ]; then
+  echo "Please run with sudo"
+  exit 1
+fi
+if [ ! -n "$1" ]; then
+  printf "Please provide Technician address: "
+  read domain
+else
+  domain=$1
+fi
+
+GREEN='\E[1;32m'
+GREENF='\E[32;5m'
+RES='\E[0m'
+
+step1_display() {
+    echo -e '[1] Plug your USB device'
+    echo -e ''
+    echo -e 'Please plug your device into a USB port. If the device is already plugged in, '
+    echo -e 'you need to re-plug it.'
+    echo -e ''
+}
+
+step2_display() {
+    echo -e '[2] Waiting for technician to start servicing your device'
+    echo -e ''
+    echo -e 'Technician is getting ready to service your device.'
+    echo -e ''
+}
+
+step3_display() {
+    echo -e '[3] Servicing your device '${GREENF}'>>>>>>>>>>>>>>>>'${RES}
+    echo -e ''
+    echo -e 'Technician is servicing your device, this may take a while. Please be patient.'
+    echo -e ''
+}
+
+step4_display() {
+    echo -e '[4] Servicing of your device has been finished'
+    echo -e ''
+#    echo -e 'Please unplug the device from USB port to end this program.'
+    echo -e ''
+}
+
+server_dl() {
+  echo -e ${1}
+  ARCH=$(uname -m)
+  if [ -z "${ARCH##*arm*}" ]; then
+    FILENAME="vhusbdarm"
+  elif [ "$ARCH" = "mips" ]; then
+    FILENAME="vhusbdmips"
+  elif [ "$ARCH" = "mipsel" ]; then
+    FILENAME="vhusbdmipsel"
+  elif [ -z "${ARCH##*x86_64*}" ]; then
+    FILENAME="vhusbdx86_64"
+  elif [ -z "${ARCH##*aarch64*}" ]; then
+    FILENAME="vhusbdarm64"
+  else
+    FILENAME="vhusbdi386"
+  fi
+  wget https://www.virtualhere.com/sites/default/files/usbserver/$FILENAME -q --show-progress -nc
+  chmod +x $FILENAME
+}
+
+scanlog_connect() {
+    sleep 1
+    cat /tmp/vhusbd.log | tail -1 | grep 'at address'
+    until [ ${?} -eq 0 ]
+    do
+       cat /tmp/vhusbd.log | tail -1 | grep 'at address'
+    done
+}
+
+scanlog_share() {
+    sleep 1
+    cat /tmp/vhusbd.log | tail -1 | grep 'BOUND to connection'
+    until [ ${?} -eq 0 ]
+    do
+       cat /tmp/vhusbd.log | tail -1 | grep 'BOUND to connection'
+    done
+}
+
+scanconfig_terminate() {
+    sleep 1
+    cat config.ini | grep 'stop.local'
+    until [ ${?} -eq 0 ]
+    do
+       cat config.ini | grep 'stop.local'
+    done
+}
+
+server_dl
+cat << EOF > config.ini
+ReverseClients=${domain}
+ClaimPorts=1
+AutoAttachToKernel=0
+ServerName=${HOSTNAME}
+EOF
+./${FILENAME} -b -r /tmp/vhusbd.log
+step1_display
+scanlog_connect > /dev/null
+step2_display
+scanlog_share > /dev/null
+step3_display
+scanconfig_terminate > /dev/null
+step4_display
+kill $(ps -axjf | grep ${FILENAME} | tail -1 | awk '{print $2}')
+rm -rf config.ini
