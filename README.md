@@ -1,28 +1,16 @@
-# VirtualHere server install and uninstall script
+# VirtualHere Reverse USB Customer Module for Linux
 
-VirtualHere server install script for `systemd` based systems (e.g Raspberry
-Pi and most modern Linux Distributions).
+On Windows, USB Redirector Technician Edition is commonly used by smartphone repair industry, so the repair man does not need to install the proprietary smartphone flash tool to customer.
+But what if the customer only has Linux machine and unwilling to install Windows for many reason?
+VirtualHere USB Server for Linux can do the job.
 
-## Installing default version
+## Usage
 
-To install the default server version for your architecture, run the following
-command and enter in your sudo password when prompted.
+1. The technician need to [install VirtualHere USB Client from here](https://www.virtualhere.com/usb_client_software), enable Reverse Client feature, and ensure the port 7573 open to public. If the technician does not have a public IP address, We strongly recommend you to purchase EasyFind Subscription.
+2. Assuming your public IP address is resolved from `yourdomain.example.com`. Ask the customer to execute this command and enter the sudo password when prompted. 
+    curl https://raw.githubusercontent.com/HikariCalyx/virtualhere_usb_redirector_linux/main/virtualhere_reverse | sudo sh -s - yourdomain.example.com:7573
+3. Now ask the customer to connect the device under proper mode (e.g. Fastboot for Android device) to Linux machine.
 
-    curl https://raw.githubusercontent.com/virtualhere/script/main/install_server | sudo sh
+## Thoughts
 
-## Installing optimized or custom version
-
-To install an optimized or custom version, pass the file name as a script
-argument. A list of optimized versions is available in the "CPU optimized
-builds of VirtualHere USB Server for Maximum Performance on your hardware"
-section of [Linux USB Server](https://www.virtualhere.com/usb_server_software)
-page.
-
-    curl https://raw.githubusercontent.com/virtualhere/script/main/install_server | sudo sh -s - vhusbdarmpi4
-
-## Uninstalling server
-
-To uninstall the server, run the following command. This script will remove
-server binary and systemd service, but it will preserve the configuration file.
-
-    curl https://raw.githubusercontent.com/virtualhere/script/main/uninstall_server | sudo sh
+Actually, VirtualHere Pty. Ltd could release a special edition of VirtualHere solely for this purpose.
