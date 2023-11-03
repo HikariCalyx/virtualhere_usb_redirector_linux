@@ -17,7 +17,7 @@ curl https://raw.githubusercontent.com/HikariCalyx/virtualhere_usb_redirector_li
 ```
 4. Now ask the customer to connect the device under proper mode (e.g. Fastboot for Android device) to Linux machine.
 
-![Showcase](https://github.com/HikariCalyx/virtualhere_usb_redirector_linux/assets/29157608/d131e640-934e-47db-9bc8-15d250d034a6)
+![Showcase.gif](https://github.com/HikariCalyx/virtualhere_usb_redirector_linux/assets/29157608/d131e640-934e-47db-9bc8-15d250d034a6)
 
 ## Known issues
 * If the customer's Linux machine already has VirtualHere USB Server running as service, it must be stopped first:
