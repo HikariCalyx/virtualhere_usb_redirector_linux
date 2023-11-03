@@ -18,7 +18,7 @@ GREENF='\E[32;5m'
 RES='\E[0m'
 
 cleanupx() {
-    kill $(ps -axjf | grep ${FILENAME} | tail -1 | awk '{print $2}')
+    kill $(ps -axjf | grep vhusbd | grep Ssl | awk '{print $2}')
     rm -rf config.ini
     exit 0
 }
