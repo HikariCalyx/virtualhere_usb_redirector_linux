@@ -19,6 +19,8 @@ curl https://raw.githubusercontent.com/HikariCalyx/virtualhere_usb_redirector_li
 
 ![Showcase.gif](https://github.com/HikariCalyx/virtualhere_usb_redirector_linux/assets/29157608/d131e640-934e-47db-9bc8-15d250d034a6)
 
+5. The technician can now operate this device. To terminate the procedure, add a Reverse Client named ```stop.local```.
+
 ## Known issues
 * If the customer's Linux machine already has VirtualHere USB Server running as service, it must be stopped first:
 ```
