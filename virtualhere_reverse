@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo -e 'VirtualHere Redirection Module'
+
 if [ "$(id -u)" -ne 0 ]; then
   echo "Please run with sudo"
   exit 1
@@ -15,7 +17,34 @@ GREEN='\E[1;32m'
 GREENF='\E[32;5m'
 RES='\E[0m'
 
+cleanupx() {
+    kill $(ps -axjf | grep ${FILENAME} | tail -1 | awk '{print $2}')
+    rm -rf config.ini
+    exit 0
+}
+
+cleanup() {
+    if [ "${criticalpart}" == "1" ]; then
+        echo -e 'Your device is currently being serviced by the technician, breaking it'
+        echo -e 'may cause your device malfunction. '
+        read -r -p 'Would you like to break the procedure anyway? [Y/n]' response
+        case '$response' in
+            [yY][eE][sS]|[yY])
+                cleanupx
+                ;;
+            *)
+                ;;
+        esac
+    else
+        cleanupx
+    fi
+}
+
+
+
 step1_display() {
+    echo -e 'Press ^C to terminate.'
+    echo -e ''
     echo -e '[1] Plug your USB device'
     echo -e ''
     echo -e 'Please plug your device into a USB port. If the device is already plugged in, '
@@ -24,6 +53,7 @@ step1_display() {
 }
 
 step2_display() {
+    criticalpart=1
     echo -e '[2] Waiting for technician to start servicing your device'
     echo -e ''
     echo -e 'Technician is getting ready to service your device.'
@@ -31,6 +61,7 @@ step2_display() {
 }
 
 step3_display() {
+    criticalpart=1
     echo -e '[3] Servicing your device '${GREENF}'>>>>>>>>>>>>>>>>'${RES}
     echo -e ''
     echo -e 'Technician is servicing your device, this may take a while. Please be patient.'
@@ -38,6 +69,7 @@ step3_display() {
 }
 
 step4_display() {
+    criticalpart=0
     echo -e '[4] Servicing of your device has been finished'
     echo -e ''
 #    echo -e 'Please unplug the device from USB port to end this program.'
@@ -92,6 +124,7 @@ scanconfig_terminate() {
 }
 
 server_dl
+trap cleanup SIGINT 
 cat << EOF > config.ini
 ReverseClients=${domain}
 ClaimPorts=1
@@ -106,5 +139,4 @@ scanlog_share > /dev/null
 step3_display
 scanconfig_terminate > /dev/null
 step4_display
-kill $(ps -axjf | grep ${FILENAME} | tail -1 | awk '{print $2}')
-rm -rf config.ini
+cleanup
