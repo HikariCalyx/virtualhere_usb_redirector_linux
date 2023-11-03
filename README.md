@@ -17,6 +17,13 @@ curl https://raw.githubusercontent.com/HikariCalyx/virtualhere_usb_redirector_li
 ```
 4. Now ask the customer to connect the device under proper mode (e.g. Fastboot for Android device) to Linux machine.
 
+## Known issues
+* If the customer's Linux machine already has VirtualHere USB Server running as service, it must be stopped first:
+```
+sudo systemctl stop virtualhere
+```
+* Break during Step 2 and 3 may not work reliably.
+
 ## Thoughts
 
 Actually, VirtualHere Pty. Ltd could release a special edition of VirtualHere solely for this purpose.
